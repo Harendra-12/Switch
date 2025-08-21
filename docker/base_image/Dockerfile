@@ -5,24 +5,16 @@ FROM debian:bookworm-slim as builder
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    autoconf automake autotools-dev binutils-dev build-essential cmake curl \
-    ca-certificates clang \
-    git lsb-release gnupg2 wget unzip \
-    libtool libtool-bin pkg-config \
-    libncurses5-dev libjpeg-dev libcurl4-openssl-dev \
-    libedit-dev libsqlite3-dev libopus-dev libssl-dev libspeexdsp-dev \
-    libavformat-dev libswscale-dev libswresample-dev libavcodec-dev libavutil-dev \
+    git wget curl gnupg2 ca-certificates lsb-release apt-transport-https \
+    build-essential pkg-config automake autoconf libtool libtool-bin cmake \
+    libncurses5-dev libjpeg-dev libcurl4-openssl-dev libpcre2-dev libspeexdsp-dev uuid-dev \
+    libldns-dev libedit-dev libsqlite3-dev libopus-dev libavformat-dev \
+    libswscale-dev libswresample-dev libavcodec-dev libavutil-dev libssl-dev \
     libsndfile1-dev libshout3-dev libmpg123-dev libmp3lame-dev libflac-dev \
     libogg-dev libvorbis-dev libyuv-dev libspandsp-dev libtiff-dev libxml2-dev \
-    libpq-dev libgnutls28-dev libonig-dev \
-    libfreetype6-dev libpng-dev \
-    libvpx-dev libavresample-dev \
-    libuuid1 uuid-dev \
-    zlib1g-dev libzstd-dev \
-    libldns-dev liblua5.2-dev \
-    libpcre3-dev libpcre2-dev \
-    libedit-dev \
+    libpq-dev libgnutls28-dev libonig-dev unzip \
     && rm -rf /var/lib/apt/lists/*
+
 
 # Build spandsp3 (required for FreeSWITCH)
 RUN git clone https://github.com/freeswitch/spandsp.git /usr/src/spandsp \
