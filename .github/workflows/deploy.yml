@@ -46,4 +46,7 @@ jobs:
               -p 8021:8021/tcp \
               -p 7443:7443/tcp \
               -p 16384-32768:16384-32768/udp \
+              -v /opt/freeswitch/conf:/etc/freeswitch \
+              -v /opt/freeswitch/log:/var/log/freeswitch \
+              -v /opt/freeswitch/db:/var/lib/freeswitch
               ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
