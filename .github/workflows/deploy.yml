@@ -1,0 +1,49 @@
+name: CI/CD FreeSWITCH with GHCR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Log in to GHCR
+      - name: Login to GHCR
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+
+      # Build Docker image
+      - name: Build Docker Image
+        run: docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest ./docker/base_image
+
+      # Push Docker image
+      - name: Push Docker Image
+        run: docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
+
+      # Deploy on Webserver
+      - name: Deploy to Webserver
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASS }}
+          script: |
+            docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" -p "${{ secrets.GHCR_TOKEN }}"
+            docker pull ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
+            docker stop freeswitch || true
+            docker rm freeswitch || true
+            docker run -d \
+              --name freeswitch \
+              -p 5060:5060/udp \
+              -p 5060:5060/tcp \
+              -p 5061:5061/tcp \
+              -p 8021:8021/tcp \
+              -p 7443:7443/tcp \
+              -p 16384-32768:16384-32768/udp \
+              ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
