@@ -7,7 +7,7 @@ FROM debian:bookworm-slim as builder
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git wget curl gnupg2 ca-certificates lsb-release apt-transport-https \
     build-essential pkg-config automake autoconf libtool libtool-bin \
-    libncurses5-dev libjpeg-dev libcurl4-openssl-dev libpcre3-dev libspeexdsp-dev \
+    libncurses5-dev libjpeg-dev libcurl4-openssl-dev libpcre2-dev libspeexdsp-dev \
     libldns-dev libedit-dev libsqlite3-dev libopus-dev libavformat-dev \
     libswscale-dev libswresample-dev libavcodec-dev libavutil-dev libssl-dev \
     libsndfile1-dev libshout3-dev libmpg123-dev libmp3lame-dev libflac-dev \
