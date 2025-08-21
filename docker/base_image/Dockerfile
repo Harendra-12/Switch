@@ -41,6 +41,14 @@ RUN git clone https://github.com/signalwire/libks.git /usr/src/libks \
     && make install \
     && ldconfig
 
+# Build signalwire-client-c
+RUN git clone https://github.com/signalwire/signalwire-c.git /usr/src/signalwire-c \
+    && cd /usr/src/signalwire-c \
+    && cmake . \
+    && make -j$(nproc) \
+    && make install \
+    && ldconfig
+
 # Clone FreeSWITCH source
 WORKDIR /usr/src
 RUN git clone https://github.com/signalwire/freeswitch.git --depth=1
