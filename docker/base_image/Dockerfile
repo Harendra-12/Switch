@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Build spandsp3
 RUN git clone https://github.com/freeswitch/spandsp.git /usr/src/spandsp \
     && cd /usr/src/spandsp \
-    && ./bootstrap.sh -j \
+    && ./bootstrap.sh \
     && ./configure \
     && make -j$(nproc) \
     && make install \
