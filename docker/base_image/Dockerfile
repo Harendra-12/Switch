@@ -15,6 +15,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev libgnutls28-dev libonig-dev unzip \
     && rm -rf /var/lib/apt/lists/*
 
+# Build spandsp3 (required for FreeSWITCH)
+RUN git clone https://github.com/freeswitch/spandsp.git /usr/src/spandsp \
+    && cd /usr/src/spandsp \
+    && ./bootstrap.sh -j \
+    && ./configure \
+    && make -j$(nproc) \
+    && make install \
+    && ldconfig
 
 # Clone FreeSWITCH source
 WORKDIR /usr/src
