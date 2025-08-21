@@ -24,6 +24,15 @@ RUN git clone https://github.com/freeswitch/spandsp.git /usr/src/spandsp \
     && make install \
     && ldconfig
 
+# Build sofia-sip (required for SIP support)
+RUN git clone https://github.com/freeswitch/sofia-sip.git /usr/src/sofia-sip \
+    && cd /usr/src/sofia-sip \
+    && ./bootstrap.sh -j \
+    && ./configure \
+    && make -j$(nproc) \
+    && make install \
+    && ldconfig
+
 # Clone FreeSWITCH source
 WORKDIR /usr/src
 RUN git clone https://github.com/signalwire/freeswitch.git --depth=1
