@@ -82,5 +82,10 @@ HEALTHCHECK --interval=30s --timeout=5s \
 EXPOSE 5060/tcp 5060/udp 5080/tcp 5080/udp 8021/tcp
 EXPOSE 16384-32768/udp
 
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["freeswitch", "-nf"]
+
+
+
