@@ -57,7 +57,7 @@ WORKDIR /usr/src/freeswitch
 # Bootstrap, configure, and build
 RUN ./bootstrap.sh -j
 RUN ./configure
-RUN make -j$(nproc)
+RUN make
 RUN make install
 
 # -------------------------------------------------------
