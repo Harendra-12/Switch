@@ -1,6 +1,6 @@
 # --------------------------------------------------------
 # Stage 1: Build FreeSWITCH from source
-# -------------------------------------------------------
+# --------------------------------------------------------
 FROM debian:bookworm-slim as builder
 
 # Install build dependencies
@@ -11,12 +11,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libldns-dev libedit-dev libsqlite3-dev libopus-dev libavformat-dev \
     libswscale-dev libswresample-dev libavcodec-dev libavutil-dev libssl-dev \
     libsndfile1-dev libshout3-dev libmpg123-dev libmp3lame-dev libflac-dev nasm yasm liblua5.3-dev \
-    libogg-dev libvorbis-dev libyuv-dev libspandsp-dev libtiff-dev libxml2-dev\
+    libogg-dev libvorbis-dev libyuv-dev libspandsp-dev libtiff-dev libxml2-dev \
     libpq-dev libgnutls28-dev libonig-dev unzip \
     && rm -rf /var/lib/apt/lists/*
 
-
-# Build spandsp3 (required for FreeSWITCH)
+# Build spandsp3
 RUN git clone https://github.com/freeswitch/spandsp.git /usr/src/spandsp \
     && cd /usr/src/spandsp \
     && ./bootstrap.sh -j \
@@ -25,7 +24,7 @@ RUN git clone https://github.com/freeswitch/spandsp.git /usr/src/spandsp \
     && make install \
     && ldconfig
 
-# Build sofia-sip (required for SIP support)
+# Build sofia-sip
 RUN git clone https://github.com/freeswitch/sofia-sip.git /usr/src/sofia-sip \
     && cd /usr/src/sofia-sip \
     && ./bootstrap.sh -j \
@@ -34,6 +33,7 @@ RUN git clone https://github.com/freeswitch/sofia-sip.git /usr/src/sofia-sip \
     && make install \
     && ldconfig
 
+# Build libks
 RUN git clone https://github.com/signalwire/libks.git /usr/src/libks \
     && cd /usr/src/libks \
     && cmake . \
@@ -65,27 +65,24 @@ RUN make install
 # -------------------------------------------------------
 FROM debian:bookworm-slim
 
-# Copy only needed files from builder
+# Copy FreeSWITCH binaries
 COPY --from=builder /usr/local /usr/local
 
-# Add entrypoint + healthcheck scripts
+# Copy scripts and version file
 COPY docker-entrypoint.sh healthcheck.sh sounds_version.txt /
 
-# Environment variables (adjust as needed)
+# Make entrypoint executable
+RUN chmod +x /docker-entrypoint.sh /healthcheck.sh
+
+# Set environment PATH
 ENV PATH="/usr/local/bin:${PATH}"
 
-# Healthcheck (example)
-HEALTHCHECK --interval=30s --timeout=5s \
-    CMD /healthcheck.sh || exit 1
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=5s CMD /healthcheck.sh || exit 1
 
 # Expose SIP & RTP ports
 EXPOSE 5060/tcp 5060/udp 5080/tcp 5080/udp 8021/tcp
 EXPOSE 16384-32768/udp
 
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+# Entrypoint
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["freeswitch", "-nf"]
-
-
-
