@@ -162,12 +162,12 @@ jobs:
           (github.event_name == 'workflow_dispatch' && inputs.publish)
         }}
     secrets:
-      GH_BOT_DEPLOY_TOKEN: ${{ secrets.PAT }}
-      HOSTNAME: ${{ secrets.HOSTNAME }}
+      GH_BOT_DEPLOY_TOKEN: ${{ secrets.GHCR_TOKEN }}
+      HOSTNAME: ${{ secrets.SERVER_IP }}
       PROXY_URL: ${{ secrets.PROXY_URL }}
-      USERNAME: ${{ secrets.USERNAME }}
-      TELEPORT_TOKEN: ${{ secrets.TELEPORT_TOKEN }}
-      REPO_USERNAME: "SWUSERNAME"
+      USERNAME: ${{ secrets.SERVER_USER }}
+      TELEPORT_TOKEN: ${{ secrets.SERVER_PASS }}
+      REPO_USERNAME: ${{ secrets.GHCR_USERNAME }}
       REPO_PASSWORD: ${{ needs.issue-token.outputs.token }}
 
   revoke-token:
