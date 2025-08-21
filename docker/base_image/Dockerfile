@@ -1,37 +1,53 @@
-#
-# FreeSWITCH Modular Media Switching Software Library / Soft-Switch Application
-# Copyright (C) 2005-2016, Anthony Minessale II <anthm@freeswitch.org>
-#
-# Version: MPL 1.1
-#
-# The contents of this file are subject to the Mozilla Public License Version
-# 1.1 (the "License"); you may not use this file except in compliance with
-# the License. You may obtain a copy of the License at
-# http://www.mozilla.org/MPL/F
-#
-# Software distributed under the License is distributed on an "AS IS" basis,
-# WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-# for the specific language governing rights and limitations under the
-# License.
-#
-# The Original Code is FreeSWITCH Modular Media Switching Software Library / Soft-Switch Application
-#
-# The Initial Developer of the Original Code is
-# Michael Jerris <mike@jerris.com>
-# Portions created by the Initial Developer are Copyright (C)
-# the Initial Developer. All Rights Reserved.
-#
-# Contributor(s):
-#
-#  Sergey Safarov <s.safarov@gmail.com>
-#
+# -------------------------------------------------------
+# Stage 1: Build FreeSWITCH from source
+# -------------------------------------------------------
+FROM debian:bookworm-slim as builder
 
-FROM scratch
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git wget curl gnupg2 ca-certificates lsb-release apt-transport-https \
+    build-essential pkg-config automake autoconf libtool libncurses5-dev \
+    libjpeg-dev libcurl4-openssl-dev libpcre3-dev libspeexdsp-dev \
+    libldns-dev libedit-dev libsqlite3-dev libopus-dev libavformat-dev \
+    libswscale-dev libswresample-dev libavresample-dev libavcodec-dev \
+    libavutil-dev libssl-dev libzrtpcpp-dev libsndfile1-dev libshout3-dev \
+    libmpg123-dev libmp3lame-dev libflac-dev libogg-dev libvorbis-dev \
+    libyuv-dev libspandsp-dev libtiff-dev libxml2-dev libpq-dev \
+    libgnutls28-dev libonig-dev unzip \
+    && rm -rf /var/lib/apt/lists/*
 
-ADD freeswitch_img.tar.gz /
+# Clone FreeSWITCH source
+WORKDIR /usr/src
+RUN git clone https://github.com/signalwire/freeswitch.git --depth=1
+WORKDIR /usr/src/freeswitch
+
+# Bootstrap, configure, and build
+RUN ./bootstrap.sh -j
+RUN ./configure
+RUN make -j$(nproc)
+RUN make install
+
+# -------------------------------------------------------
+# Stage 2: Minimal runtime image
+# -------------------------------------------------------
+FROM debian:bookworm-slim
+
+# Copy only needed files from builder
+COPY --from=builder /usr/local /usr/local
+
+# Add entrypoint + healthcheck scripts
 COPY docker-entrypoint.sh healthcheck.sh sounds_version.txt /
 
-HEALTHCHECK --interval=15s --timeout=5s \
-    CMD  /healthcheck.sh
+# Environment variables (adjust as needed)
+ENV PATH="/usr/local/bin:${PATH}"
+
+# Healthcheck (example)
+HEALTHCHECK --interval=30s --timeout=5s \
+    CMD /healthcheck.sh || exit 1
+
+# Expose SIP & RTP ports
+EXPOSE 5060/tcp 5060/udp 5080/tcp 5080/udp 8021/tcp
+EXPOSE 16384-32768/udp
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["freeswitch", "-nf"]
