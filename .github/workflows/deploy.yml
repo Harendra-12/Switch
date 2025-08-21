@@ -49,4 +49,4 @@ jobs:
               -v /opt/freeswitch/conf:/etc/freeswitch \
               -v /opt/freeswitch/log:/var/log/freeswitch \
               -v /opt/freeswitch/db:/var/lib/freeswitch
-              ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
+              ghcr.io/harendra-12/freeswitch:latest
