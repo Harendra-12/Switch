@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-# Ensure required directories exist (dynamic creation)
 mkdir -p /etc/freeswitch /var/log/freeswitch /var/lib/freeswitch /usr/share/freeswitch/sounds
 
 # Populate default configs if missing
