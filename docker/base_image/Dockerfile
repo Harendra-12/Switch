@@ -6,7 +6,7 @@ FROM debian:bookworm-slim as builder
 # Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git wget curl gnupg2 ca-certificates lsb-release apt-transport-https \
-    build-essential pkg-config automake autoconf libtool libtool-bin \
+    build-essential pkg-config automake autoconf libtool libtool-bin cmake \
     libncurses5-dev libjpeg-dev libcurl4-openssl-dev libpcre2-dev libspeexdsp-dev \
     libldns-dev libedit-dev libsqlite3-dev libopus-dev libavformat-dev \
     libswscale-dev libswresample-dev libavcodec-dev libavutil-dev libssl-dev \
@@ -29,6 +29,13 @@ RUN git clone https://github.com/freeswitch/sofia-sip.git /usr/src/sofia-sip \
     && cd /usr/src/sofia-sip \
     && ./bootstrap.sh -j \
     && ./configure \
+    && make -j$(nproc) \
+    && make install \
+    && ldconfig
+
+RUN git clone https://github.com/signalwire/libks.git /usr/src/libks \
+    && cd /usr/src/libks \
+    && cmake . \
     && make -j$(nproc) \
     && make install \
     && ldconfig
