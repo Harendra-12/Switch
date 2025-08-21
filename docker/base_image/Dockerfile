@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential pkg-config automake autoconf libtool libncurses5-dev \
     libjpeg-dev libcurl4-openssl-dev libpcre3-dev libspeexdsp-dev \
     libldns-dev libedit-dev libsqlite3-dev libopus-dev libavformat-dev \
-    libswscale-dev libswresample-dev libavresample-dev libavcodec-dev \
-    libavutil-dev libssl-dev libzrtpcpp-dev libsndfile1-dev libshout3-dev \
+    libswscale-dev libswresample-dev libavcodec-dev \
+    libavutil-dev libssl-dev libsndfile1-dev libshout3-dev \
     libmpg123-dev libmp3lame-dev libflac-dev libogg-dev libvorbis-dev \
     libyuv-dev libspandsp-dev libtiff-dev libxml2-dev libpq-dev \
     libgnutls28-dev libonig-dev unzip \
