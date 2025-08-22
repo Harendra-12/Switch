@@ -123,7 +123,7 @@ jobs:
       - issue-token
     uses: signalwire/actions-template/.github/workflows/cicd-docker-build-and-distribute.yml@main
     strategy:
-      # max-parallel: 1
+      # max-parallel: 11
       fail-fast: false
       matrix:
         os:
