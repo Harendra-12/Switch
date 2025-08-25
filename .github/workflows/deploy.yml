@@ -21,7 +21,7 @@ jobs:
 
       # Build Docker image
       - name: Build Docker Image
-        run: docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest ./docker/base_image
+        run: docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest ./docker/master
 
       # Push Docker image
       - name: Push Docker Image
@@ -35,8 +35,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            aws ecr get-login-password --region us-east-2 \
-            |  docker login --username AWS --password-stdin 677276107791.dkr.ecr.us-east-2.amazonaws.com  
-
             docker pull ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
-            docker run -d --name freeswitch 677276107791.dkr.ecr.us-east-2.amazonaws.com/ecr_repository:freeswitch
+            docker run -d --name test ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
