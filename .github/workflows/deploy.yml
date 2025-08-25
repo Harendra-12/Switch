@@ -39,15 +39,4 @@ jobs:
             |  docker login --username AWS --password-stdin 677276107791.dkr.ecr.us-east-2.amazonaws.com  
 
             docker pull 677276107791.dkr.ecr.us-east-2.amazonaws.com/ecr_repository:freeswitch
-            docker run -d \
-              --name freeswitch \
-              -p 5060:5060/udp \
-              -p 5060:5060/tcp \
-              -p 5061:5061/tcp \
-              -p 8021:8021/tcp \
-              -p 7443:7443/tcp \
-              -p 16384-32768:16384-32768/udp \
-              -v /opt/freeswitch/conf:/etc/freeswitch \
-              -v /opt/freeswitch/log:/var/log/freeswitch \
-              -v /opt/freeswitch/db:/var/lib/freeswitch \
-              677276107791.dkr.ecr.us-east-2.amazonaws.com/ecr_repository:freeswitch
+            docker run -d --name freeswitch 677276107791.dkr.ecr.us-east-2.amazonaws.com/ecr_repository:freeswitch
