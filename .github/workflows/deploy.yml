@@ -21,7 +21,7 @@ jobs:
 
       # Build Docker image
       - name: Build Docker Image
-        run: docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest ./docker/master
+        run: docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest ./docker/base_image
 
       # Push Docker image
       - name: Push Docker Image
