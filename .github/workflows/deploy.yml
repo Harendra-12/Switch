@@ -39,8 +39,6 @@ jobs:
             |  docker login --username AWS --password-stdin 677276107791.dkr.ecr.us-east-2.amazonaws.com  
 
             docker pull 677276107791.dkr.ecr.us-east-2.amazonaws.com/ecr_repository:freeswitch
-            docker stop freeswitch || true
-            docker rm freeswitch || true
             docker run -d \
               --name freeswitch \
               -p 5060:5060/udp \
