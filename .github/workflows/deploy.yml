@@ -1,3 +1,4 @@
+
 name: CI/CD FreeSWITCH with GHCR
 
 on:
@@ -34,6 +35,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            aws ecr get-login-password --region us-east-2 \
+            |  docker login --username AWS --password-stdin 677276107791.dkr.ecr.us-east-2.amazonaws.com  
 
             docker pull 677276107791.dkr.ecr.us-east-2.amazonaws.com/ecr_repository:freeswitch
             docker stop freeswitch || true
