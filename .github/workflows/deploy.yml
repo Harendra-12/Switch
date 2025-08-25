@@ -20,12 +20,12 @@ jobs:
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
 
       # Build Docker image
-      - name: Build Docker Image
-        run: docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest ./docker/base_image
+       #- name: Build Docker Image
+       # run: docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest ./docker/base_image
 
       # Push Docker image
-      - name: Push Docker Image
-        run: docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
+      #- name: Push Docker Image
+      #  run: docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
 
       # Deploy on Webserver
       - name: Deploy to Webserver
@@ -35,5 +35,6 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" -p "${{ secrets.GHCR_TOKEN }}"   
             docker pull ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
             docker run -d --name test ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
