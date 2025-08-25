@@ -34,8 +34,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" -p "${{ secrets.GHCR_TOKEN }}"
-            docker pull ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
+
+            docker pull 677276107791.dkr.ecr.us-east-2.amazonaws.com/ecr_repository:freeswitch
             docker stop freeswitch || true
             docker rm freeswitch || true
             docker run -d \
@@ -49,4 +49,4 @@ jobs:
               -v /opt/freeswitch/conf:/etc/freeswitch \
               -v /opt/freeswitch/log:/var/log/freeswitch \
               -v /opt/freeswitch/db:/var/lib/freeswitch \
-              ghcr.io/harendra-12/freeswitch:latest
+              677276107791.dkr.ecr.us-east-2.amazonaws.com/ecr_repository:freeswitch
