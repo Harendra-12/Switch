@@ -38,4 +38,4 @@ jobs:
             aws ecr get-login-password --region us-east-2 \
             |  docker login --username AWS --password-stdin 677276107791.dkr.ecr.us-east-2.amazonaws.com     
             docker pull 677276107791.dkr.ecr.us-east-2.amazonaws.com/ecr_repository:freeswitch
-            docker run -d --name test ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
+            docker run -d --name free 677276107791.dkr.ecr.us-east-2.amazonaws.com/ecr_repository:freeswitch
