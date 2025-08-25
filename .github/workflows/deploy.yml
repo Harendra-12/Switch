@@ -16,12 +16,12 @@ jobs:
         uses: actions/checkout@v3
 
       # Log in to GHCR
-      - name: Login to GHCR
-        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+      #- name: Login to GHCR
+      #  run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
 
       # Build Docker image
        #- name: Build Docker Image
-       # run: docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest ./docker/base_image
+       # run: docker build -t 677276107791.dkr.ecr.us-east-2.amazonaws.com/ecr_repository:freeswitch ./docker/base_image
 
       # Push Docker image
       #- name: Push Docker Image
@@ -35,6 +35,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" -p "${{ secrets.GHCR_TOKEN }}"   
-            docker pull ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
+            aws ecr get-login-password --region us-east-2 \
+            |  docker login --username AWS --password-stdin 677276107791.dkr.ecr.us-east-2.amazonaws.com     
+            docker pull 677276107791.dkr.ecr.us-east-2.amazonaws.com/ecr_repository:freeswitch
             docker run -d --name test ghcr.io/${{ secrets.GHCR_USERNAME }}/freeswitch:latest
